@@ -8,6 +8,7 @@ var UI = require('ui');
 var Settings = require('settings');
 var ajax = require('ajax');
 var Feature = require('platform/feature');
+var Vibe = require('ui/vibe');
 
 // habitica API constants
 var habiticaBaseUrl = 'https://habitica.com/api/v3';
@@ -120,7 +121,7 @@ if (!checkHabiticaStatus) {
           switch (e.itemIndex) {
             case 0: { // stats
               if (!user) {
-                console.log('No user data available');
+                // console.log('No user data available');
                 var cardNoUser = new UI.Card({
                   title: 'No user data',
                   body: 'No user data available. Please retry.'
@@ -270,41 +271,6 @@ function createTasksMenu(section) {
       }
     }
   }
-  
-  menu.on('longSelect', function(e) {
-    if (e.item.down === true) {
-      //console.log('The selected task has .down-item.');
-      if (e.item.up === false) {
-        //console.log('The selected task has no .up-item.');
-        scoreTaskDown(e.item);
-      } else {
-        var selectedTask = e;
-        var cardUpDown = new UI.Card(
-          {
-            'title': e.item.type,
-            'body': e.item.title
-          }
-        );
-        cardUpDown.action({
-          up: 'images/action_icon_plus.png',
-          down: 'images/action_icon_minus.png'
-        });
-        cardUpDown.on('click', 'up', function(e) {
-          //console.log('cardUpDown click up');
-          scoreTaskUp(selectedTask.item);
-          cardUpDown.hide();
-        });
-        cardUpDown.on('click', 'down', function(e) {
-          //console.log('cardUpDown click down');
-          scoreTaskDown(selectedTask.item);
-          cardUpDown.hide();
-        });
-        cardUpDown.show();
-      }
-    } else {
-      scoreTaskUp(e.item);
-    }
-  });
   
   menu.on('select', function(e) {
     //console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
@@ -470,6 +436,8 @@ function scoreTaskUp(task) {
             user.stats.exp = data.data.exp;
             user.stats.gp = data.data.gp;
             user.stats.lvl = data.data.lvl;
+            
+            goodVibe(); // Reward the user for doing well :)
           } else {
             console.log(data.error + ' - ' + data.message);
           }
@@ -508,6 +476,8 @@ function scoreTaskDown(task) {
             user.stats.exp = data.data.exp;
             user.stats.gp = data.data.gp;
             user.stats.lvl = data.data.lvl;
+            
+            badVibe(); // Scold the user for doing bad.
           } else {
             console.log(data.error + ' - ' + data.message);
           }
@@ -597,38 +567,10 @@ function habiticaWeekday(date) {
   }
 }
 
-function getMatchingStr4MenuItemTitle(input) {
-  var output = '';
-  var charWidth = new Array([]);
-  charWidth[97] = 9;
-  charWidth[98] = 9;
-  charWidth[99] = 9;
-  charWidth[100] = 9;
-  charWidth[101] = 9;
-  charWidth[102] = 7;
-  charWidth[103] = 9;
-  charWidth[104] = 9;
-  charWidth[105] = 4;
-  charWidth[106] = 4;
-  charWidth[107] = 9;
-  charWidth[108] = 4;
-  charWidth[109] = 14;
-  charWidth[110] = 9;
-  charWidth[111] = 9;
-  charWidth[112] = 9;
-  charWidth[113] = 9;
-  charWidth[114] = 7;
-  charWidth[115] = 7;
-  charWidth[116] = 7;
-  charWidth[117] = 9;
-  charWidth[118] = 9;
-  charWidth[119] = 11;
-  charWidth[120] = 9;
-  charWidth[121] = 9;
-  charWidth[122] = 7;
-  
-  for (var i = 0; i < input.length; i++){
-    
-  }
-  return output;
+function goodVibe() {
+  Vibe.vibrate('long');
+}
+
+function badVibe() {
+  Vibe.vibrate('double');
 }

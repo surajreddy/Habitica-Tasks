@@ -3,8 +3,8 @@
     "capabilities": [
         "configurable"
     ],
-    "companyName": "kdemerath@gmx.de",
-    "longName": "Habitica Tasks",
+    "companyName": "Suraj Reddy",
+    "longName": "Habitica",
     "projectType": "pebblejs",
     "resources": {
         "media": [
@@ -35,27 +35,27 @@
                 "type": "bitmap"
             },
             {
-                "file": "images/action_icon_minus.png",
-                "name": "IMAGES_ACTION_ICON_MINUS_PNG",
+                "file": "images/action_icon_plus.png",
+                "name": "IMAGES_ACTION_ICON_PLUS_PNG",
                 "type": "bitmap"
             },
             {
-                "file": "images/action_icon_plus.png",
-                "name": "IMAGES_ACTION_ICON_PLUS_PNG",
+                "file": "images/action_icon_minus.png",
+                "name": "IMAGES_ACTION_ICON_MINUS_PNG",
                 "type": "bitmap"
             }
         ]
     },
     "sdkVersion": "3",
-    "shortName": "Habitica Tasks",
+    "shortName": "Habitica",
     "targetPlatforms": [
         "aplite",
         "basalt",
         "chalk"
     ],
-    "uuid": "0eb30e8c-0040-40e5-a72b-47ddf0fba3c9",
+    "uuid": "3fdf5d2b-3237-4f24-accb-2f8f950cfcce",
     "versionCode": 1,
-    "versionLabel": "1.8",
+    "versionLabel": "1.9",
     "watchapp": {
         "hiddenApp": false,
         "watchface": false
