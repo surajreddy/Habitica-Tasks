@@ -19,21 +19,26 @@ var habiticaGetUser = '/user';
 var habiticaPostTasksScore = '/tasks/:taskId/score/:direction';
 var habiticaPostTasksChecklistScore = '/tasks/:taskId/checklist/:itemId/score';
 
+Settings.option('userId','555cfb2d-b52b-4a00-b0a8-1c66d74a5de9');
+Settings.option('apiToken','d1770bca-5ba4-4bc8-b42e-ebefb0114241');
+
 // Set a configurable
 Settings.config(
   { url: 'https://kdemerath.github.io/settings.html' },
   function(e) {
-    //console.log('opening configurable');
+    console.log('opening configurable');
   },
   function(e) {
-    //console.log('closed configurable');
+    console.log('closed configurable');
     // Show the raw response if parsing failed
     if (e.failed) {
       console.log(e.response);
     } else {
       var options = Settings.option();
-      //console.log(JSON.stringify(options));
+      console.log(JSON.stringify(options));
       Settings.data(options);
+      Settings.option('userId','555cfb2d-b52b-4a00-b0a8-1c66d74a5de9');
+      Settings.option('apiToken','d1770bca-5ba4-4bc8-b42e-ebefb0114241');
     }
   }
 );
@@ -84,7 +89,7 @@ if (!checkHabiticaStatus) {
   });
   
   mainMenu.on('select', function(e) {
-    //console.log('Selected section ' + e.sectionIndex + ' "' + e.section.title + '" item ' + e.itemIndex + ' "' + e.item.title + '"');
+    console.log('Selected section ' + e.sectionIndex + ' "' + e.section.title + '" item ' + e.itemIndex + ' "' + e.item.title + '"');
     if (!allTasks) {
       console.log('No tasks available');
       var cardNoTasks = new UI.Card({
@@ -93,7 +98,7 @@ if (!checkHabiticaStatus) {
       });
       cardNoTasks.show();
     } else {
-      //console.log('Tasks available');
+      console.log('Tasks available');
       switch (e.sectionIndex) {
         case 0: { // tasks
           // create tasks menu
@@ -121,7 +126,7 @@ if (!checkHabiticaStatus) {
           switch (e.itemIndex) {
             case 0: { // stats
               if (!user) {
-                // console.log('No user data available');
+                console.log('No user data available');
                 var cardNoUser = new UI.Card({
                   title: 'No user data',
                   body: 'No user data available. Please retry.'
@@ -208,7 +213,7 @@ function createTasksMenu(section) {
     
     // get only 'section' tasks
     if (!section) {
-      //console.log('Section not defined. Get all kind of tasks.');
+      console.log('Section not defined. Get all kind of tasks.');
       allTasksPrep = enrichTaskItemsByMenuFields(allTasksPrep);
       
       // put appropriate tasks into sections
@@ -233,7 +238,7 @@ function createTasksMenu(section) {
       menu.section(1, sectionDailies);
       menu.section(2, sectionToDos);
     } else {
-      //console.log('Section is "' + section + '". Get only these kind of tasks.');
+      console.log('Section is "' + section + '". Get only these kind of tasks.');
       switch (section) {
         case 'habit': {
           sectionHabits.items = allTasksPrep.filter(
@@ -250,7 +255,7 @@ function createTasksMenu(section) {
             function(x){
               var today = new Date();
               var startDate = new Date(x.startDate);
-              //console.log('heute ist ' + today + '. Start Datum war ' + startDate + '. Differenz ist ' + (today - startDate) + '. Das sind ' + Math.floor((today - startDate)/(1000*60*60*24)) + ' Tage.');
+              console.log('heute ist ' + today + '. Start Datum war ' + startDate + '. Differenz ist ' + (today - startDate) + '. Das sind ' + Math.floor((today - startDate)/(1000*60*60*24)) + ' Tage.');
               return x.type == 'daily' && !x.completed  && ((x.frequency == 'weekly' && x.repeat[habiticaWeekday()]) || (x.frequency == 'daily' & startDate < today && (Math.floor((today - startDate)/(1000*60*60*24)) % x.everyX === 0)));
             }
           ).slice();
@@ -273,12 +278,12 @@ function createTasksMenu(section) {
   }
   
   menu.on('select', function(e) {
-    //console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-    //console.log('The item is titled "' + e.item.title + '"');
+    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
+    console.log('The item is titled "' + e.item.title + '"');
     if (e.item.down === true) {
-      //console.log('The selected task has .down-item.');
+      console.log('The selected task has .down-item.');
       if (e.item.up === false) {
-        //console.log('The selected task has no .up-item.');
+        console.log('The selected task has no .up-item.');
         scoreTaskDown(e.item);
       } else {
         var selectedTask = e;
@@ -293,20 +298,20 @@ function createTasksMenu(section) {
           down: 'images/action_icon_minus.png'
         });
         cardUpDown.on('click', 'up', function(e) {
-          //console.log('cardUpDown click up');
+          console.log('cardUpDown click up');
           scoreTaskUp(selectedTask.item);
           cardUpDown.hide();
         });
         cardUpDown.on('click', 'down', function(e) {
-          //console.log('cardUpDown click down');
+          console.log('cardUpDown click down');
           scoreTaskDown(selectedTask.item);
           cardUpDown.hide();
         });
         cardUpDown.show();
       }
     } else {
-      //console.log('The selected task has no .down-item.');
-      //console.log('Selected item is:' + JSON.stringify(e.item));
+      console.log('The selected task has no .down-item.');
+      console.log('Selected item is:' + JSON.stringify(e.item));
       if (typeof e.item.checklist !== 'undefined' && e.item.checklist.length > 0) {
         // access checklist
         var checklistMenu = new UI.Menu({
@@ -320,7 +325,7 @@ function createTasksMenu(section) {
         sectionChecklist.items = e.item.checklist.slice();
         sectionChecklist.items = enrichChecklistItemsByMenuFields(sectionChecklist.items, e.item.id);
         checklistMenu.section(0, sectionChecklist);
-        //console.log(JSON.stringify(sectionChecklist)); // remove
+        console.log(JSON.stringify(sectionChecklist)); // remove
         checklistMenu.on('select', function(e) {
           scoreChecklistItem(e.item);
         });
@@ -350,7 +355,7 @@ function scoreChecklistItem(checklistItem) {
         },
         function(data, status, request) {
           if (data.success){
-            //console.log('User tasks: ' + JSON.stringify(data));
+            console.log('User tasks: ' + JSON.stringify(data));
             
           } else {
             console.log(data.error + ' - ' + data.message);
@@ -402,7 +407,7 @@ function getUserTasks() {
     },
     function(data, status, request) {
       if (data.success){
-        //console.log('User tasks: ' + JSON.stringify(data));
+        console.log('User tasks: ' + JSON.stringify(data));
         allTasks = data.data;
       } else {
         console.log(data.error + ' - ' + data.message);
@@ -429,7 +434,7 @@ function scoreTaskUp(task) {
         },
         function(data, status, request) {
           if (data.success){
-            //console.log('User tasks: ' + JSON.stringify(data));
+            console.log('User tasks: ' + JSON.stringify(data));
             // update users stats
             user.stats.hp = data.data.hp;
             user.stats.mp = data.data.mp;
@@ -469,7 +474,7 @@ function scoreTaskDown(task) {
         },
         function(data, status, request) {
           if (data.success){
-            //console.log('User tasks: ' + JSON.stringify(data));
+            console.log('User tasks: ' + JSON.stringify(data));
             // update users stats
             user.stats.hp = data.data.hp;
             user.stats.mp = data.data.mp;
@@ -506,7 +511,7 @@ function getUserObject() {
     },
     function(data, status, request) {
       if (data.success){
-        //console.log('User object: ' + JSON.stringify(data));
+        console.log('User object: ' + JSON.stringify(data));
         user = data.data;
       } else {
         console.log(data.error + ' - ' + data.message);
@@ -568,9 +573,9 @@ function habiticaWeekday(date) {
 }
 
 function goodVibe() {
-  Vibe.vibrate('long');
+  Vibe.vibrate('double');
 }
 
 function badVibe() {
-  Vibe.vibrate('double');
+  Vibe.vibrate('long');
 }
